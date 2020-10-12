@@ -1,0 +1,1 @@
+docker build . -t site-minicurso-kubernetes:1.0

@@ -1,0 +1,91 @@
+version: '3'
+
+services:
+  sql2017:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: SqlServer2017!
+    ports:
+      - "51435:1433"
+    networks:
+      - databases
+
+  sql2019:
+    image: mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: SqlServer2019!
+    ports:
+      - "51436:1433"
+    networks:
+      - databases
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "Postgres2020!"
+    ports:
+      - "15432:5432"
+    networks:
+      - databases
+      
+  web-pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "renatogroff@yahoo.com.br"
+      PGADMIN_DEFAULT_PASSWORD: "PgAdmin2020!"
+    ports:
+      - "15433:80"
+    depends_on:
+      - postgres
+    networks:
+      - databases
+
+  mysqlsrv:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: "MySql2020!"
+      MYSQL_DATABASE: "testedb"
+    ports:
+      - "3306:3306"
+    networks:
+      - databases
+
+  adminer:
+    image: adminer
+    ports:
+      - "3307:8080"
+    depends_on:
+      - mysqlsrv
+    networks:
+      - databases
+
+  mongo:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: MongoDB2020!
+    ports:
+      - "37017:27017"
+    networks:
+      - databases    
+
+  mongo-express:
+    image: mongo-express:latest
+    ports:
+      - 19081:8081
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: renatogroffe
+      ME_CONFIG_BASICAUTH_PASSWORD: MongoExpress2020!
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: MongoDB2020!
+    depends_on:
+      - mongo
+    networks:
+      - databases
+
+networks: 
+    databases:
+      driver: bridge
